@@ -6,7 +6,7 @@ import java.util.Date
 import java.util.concurrent.CompletableFuture
 
 import org.adridadou.ethereum.propeller.solidity.SolidityContractDetails
-import org.adridadou.ethereum.propeller.values.{EthAccount, EthAddress, Payable, SoliditySourceFile}
+import org.adridadou.ethereum.propeller.values._
 import org.scalatest.check.Checkers
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -32,11 +32,30 @@ class CompileAndDeployExample extends FlatSpec with Matchers with Checkers {
 
     contractInterface.getM shouldBe MyReturnType(true,"hello", 34)
   }
+
+  "Ethereum Contract" should "be able to observe an event from the ethereum network" in {
+
+    val ethereum = PropellerSetupExamples.scalaWrapperForTest
+    val compilationResult = ethereum.compile(SoliditySourceFile.from(new File("src/test/resources/contractEvents.sol")))
+    val myCompiledContract:SolidityContractDetails = compilationResult.findContract("contractEvents").get
+    val eventDefinition = ethereum.findEventDefinition[MyEvent](myCompiledContract, "MyEvent").get
+
+    val futureAddress = ethereum.publishContract(myCompiledContract, PropellerSetupExamples.testAccount)
+    val address:EthAddress = Await.result(futureAddress, Duration.Inf)
+    val myContract = ethereum.createContractProxy[ContractEvents](myCompiledContract, address,PropellerSetupExamples.testAccount)
+    val observeEventWithInfo = ethereum.observeEventsWIthInfo[MyEvent](eventDefinition, address)
+
+    myContract.createEvent("my event is here and it is much longer than anticipated")
+    observeEventWithInfo.foreach(result => {
+      result.getTransactionHash shouldBe EthHash.of("6717c8616d06184e589aae321d1a2349679675fc6c7af95368c2e5f3e71daaef")
+      result.getResult.value shouldBe "my event is here and it is much longer than anticipated"
+    })
+  }
 }
 
 
 trait MyContract2 {
-  def myMethod(value: String): Future[Integer]
+  def myMethod(value: String): EthCall[Integer]
 
   def myMethod2(value: String): Future[Void]
 
@@ -63,5 +82,10 @@ trait MyContract2 {
   def getAccountAddress(account: EthAccount): EthAddress
 }
 
+trait ContractEvents {
+  def createEvent(value: String): CompletableFuture[Void]
+}
 
 case class MyReturnType(val1: Boolean, val2: String, val3: Integer)
+
+case class MyEvent(from: EthAddress, to: EthAddress, value: String, ethData: EthData)
