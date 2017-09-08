@@ -46,10 +46,10 @@ class CompileAndDeployExample extends FlatSpec with Matchers with Checkers {
     val observeEventWithInfo = ethereum.observeEventsWIthInfo[MyEvent](eventDefinition, address)
 
     myContract.createEvent("my event is here and it is much longer than anticipated")
-    observeEventWithInfo.foreach(result => {
-      result.getTransactionHash shouldBe EthHash.of("6717c8616d06184e589aae321d1a2349679675fc6c7af95368c2e5f3e71daaef")
-      result.getResult.value shouldBe "my event is here and it is much longer than anticipated"
-    })
+    val result = observeEventWithInfo.toBlocking.first
+    result.getTransactionHash shouldBe EthHash.of("4b429745f6477e056d29a8da7acff8c7c2f7f57516e389b9fc3a1c5ec1e604da")
+    result.getResult.value shouldBe "my event is here and it is much longer than anticipated"
+
   }
 }
 
