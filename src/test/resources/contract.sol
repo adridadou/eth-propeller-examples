@@ -8,58 +8,58 @@ contract myContract2 {
 
     address owner;
 
-    function myContract2() {
+    constructor() public {
         owner = msg.sender;
     }
 
-    function myMethod(string value) returns (uint) {
+    function myMethod(string value) public returns (uint) {
         i1 = value;
         return 12;
     }
 
-    function myMethod2(string value) returns (bool success) {
+    function myMethod2(string value) public returns (bool success) {
         i2 = value;
         return true;
     }
 
-    function myMethod3(string value) payable returns (bool success) {
+    function myMethod3(string value) public payable returns (bool success) {
         i2 = value;
         return true;
     }
 
-    function getEnumValue() constant returns (uint) {return 1;}
+    function getEnumValue() pure public returns (uint) {return 1;}
 
-    function getI1() constant returns (string) {return i1;}
+    function getI1() constant public returns (string) {return i1;}
 
-    function getI2() constant returns (string) {return i2;}
+    function getI2() constant public returns (string) {return i2;}
 
-    function getT() constant returns (bool) {return true;}
+    function getT() pure public returns (bool) {return true;}
 
-    function getM() constant returns (bool, string, uint) {return (true, "hello", 34);}
+    function getM() pure public returns (bool, string, uint) {return (true, "hello", 34);}
 
-    function getOwner() constant returns (address) {return owner;}
+    function getOwner() view public returns (address) {return owner;}
 
-    function getArray() constant returns (uint[10] arr) {
+    function getArray() pure public returns (uint[10] arr) {
         for (uint i = 0; i < 10; i++) {
             arr[i] = i;
         }
     }
 
-    function getSet() constant returns (uint[10] arr) {
+    function getSet() public pure returns (uint[10] arr) {
         for (uint i = 0; i < 10; i++) {
             arr[i] = i;
         }
     }
 
-    function throwMe() {
+    function throwMe() public pure {
         revert();
     }
 
-    function getInitTime(uint time) constant returns (uint) {
+    function getInitTime(uint time) public pure returns (uint) {
         return time;
     }
 
-    function getAccountAddress(address addr) constant returns (address) {
+    function getAccountAddress(address addr) public pure returns (address) {
         return addr;
     }
 }
