@@ -1,11 +1,11 @@
 package org.adridadou.ethereum.propeller.examples
 
-import org.adridadou.ethereum.{EthjEthereumFacadeProvider, RpcEthereumFacadeProvider}
+import org.adridadou.ethereum.EthjEthereumFacadeProvider
 import org.adridadou.ethereum.ethj.{EthereumJConfigs, TestConfig}
-import org.adridadou.ethereum.propeller.EthereumFacade
+import org.adridadou.ethereum.propeller.{EthereumFacade, RpcEthereumFacadeProvider}
 import org.adridadou.ethereum.propeller.keystore.AccountProvider
+import org.adridadou.ethereum.propeller.values.config.InfuraKey
 import org.adridadou.ethereum.propeller.values.{EthAccount, EthValue, GasPrice}
-import org.adridadou.ethereum.values.config.InfuraKey
 import org.adridadou.propeller.scala.ScalaEthereumFacade
 
 /**
