@@ -19,7 +19,7 @@ class OtherSpec extends FlatSpec with Matchers with Checkers {
   "Solidity compiler" should "get the compiler version" in {
     val solidityVersion = solidityCompiler.getVersion.getVersion
     println(solidityVersion)
-    assertTrue(solidityVersion.startsWith("0.4.16"))
+    assertTrue(solidityVersion.startsWith("0.4.25"))
   }
 
   it should "compile a smart contract from a single file" in {
